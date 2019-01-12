@@ -23,8 +23,8 @@ TagManager:
   - Player
   - monster
   - stair
-  - 
-  - 
+  - stairup
+  - stairdown
   - 
   - 
   - 
