@@ -7,6 +7,7 @@ public class PlayerClimbState : PlayerBaseState
     private PlayerFacade _player;
     private float horizontal;
     private float vertical;
+    RaycastHit2D hit;
 
     public PlayerClimbState(PlayerFacade _player)
     {
@@ -37,7 +38,9 @@ public class PlayerClimbState : PlayerBaseState
         }
         if (Input.GetKeyUp(KeyCode.UpArrow)&& !Input.GetKey(KeyCode.DownArrow))
         {
+            _player.rig.velocity = new Vector2(0, 0);
             _player.anim.speed = 0;
+
         }
         if (Input.GetKeyUp(KeyCode.DownArrow) && !Input.GetKey(KeyCode.UpArrow))
         {
@@ -60,7 +63,20 @@ public class PlayerClimbState : PlayerBaseState
 
     public void FixedUpdate()
     {
-
+        Vector2 pos = _player.trs.position;
+        pos.x += 0.2f;
+        pos.y += 0.5f;
+        hit = Physics2D.Raycast(pos, Vector2.up, 0.5f, 1 << LayerMask.NameToLayer("stairup"));
+        if (hit.collider != null)
+        {
+            _player.trs.parent = hit.collider.transform;
+            _player.rig.velocity=new Vector2(0, 0);
+            _player.SetState(new PlayerIdleState(_player));
+            _player.anim.SetInteger("state", 0);
+            _player.anim.speed = 1;
+            _player.trs.localPosition = new Vector3(0,-0.06f,_player.trs.localPosition.z);
+            _player.trs.parent = null;
+        }
     }
    public void HandleInput()
     {
