@@ -11,6 +11,8 @@ TagManager:
   - backlift
   - trap
   - stair
+  - winCount
+  - effect
   layers:
   - Default
   - TransparentFX

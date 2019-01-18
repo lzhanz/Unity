@@ -8,13 +8,16 @@ public class PlayerFacade
     public Animator anim;
     public Rigidbody2D rig;
     public Transform trs;
+    public InputQueue _inputQueue;
 
     public PlayerFacade(Animator at,Rigidbody2D rig,Transform trs)
     {
-        _state = new PlayerIdleState(this);
-        anim = at;
         this.trs = trs;
         this.rig = rig;
+        _state = new PlayerIdleState(this);
+        _inputQueue = new InputQueue();
+        anim = at;
+ 
     }
 
 

@@ -3,6 +3,7 @@
 	Properties
 	{
 		_MainTex("Main Texture", 2D) = "white"{}									//主纹理
+	  
 		_EdgeAlphaThreshold("Edge Alpha Threshold", Float) = 1.0					//边界透明度和的阈值
 		_EdgeColor("Edge Color", Color) = (0,0,0,1)									//边界颜色
 		_EdgeDampRate("Edge Damp Rate", Float) = 2									//边缘渐变的分母
@@ -30,6 +31,7 @@
 			fixed4 _EdgeColor;
 			float _EdgeDampRate;
 			float _OriginAlphaThreshold;
+
 
 			struct v2f
 			{
@@ -78,8 +80,8 @@
 					float damp = saturate((alphaSum - _EdgeAlphaThreshold) * _EdgeDampRate);
 					fixed4 orign = tex2D(_MainTex, i.uv[4]);
 					float isOrigon = orign.a > _OriginAlphaThreshold;
+				
 					fixed3 finalColor = lerp(_EdgeColor.rgb, orign.rgb, isOrigon);
-
 					return fixed4(finalColor.rgb, isNeedShow * damp);
 				#endif
 

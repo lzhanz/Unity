@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerIdleState : PlayerBaseState {
+public class PlayerIdleState : PlayerBaseState
+{
 
     private PlayerFacade _player;
     private float horizontal;
     private float speedX;
     RaycastHit2D hit;
     RaycastHit2D hitDown;
+    private int index;
+   
     bool isClimb = false;
 
     public PlayerIdleState(PlayerFacade facade)
@@ -24,22 +27,27 @@ public class PlayerIdleState : PlayerBaseState {
 
     public void Update()
     {
-        
        
-        if (Input.GetKeyDown(KeyCode.C))
+        if (HandleKey(_player._inputQueue.GetIndex()) !=-1)
+        {
+            return;
+        }
+      
+
+         if (Input.GetKeyDown(KeyCode.C))
         {
             _player.SetState(new PlayerJumpState(_player));
             _player.anim.SetInteger("state", 1);
         }
-        if (Input.GetKeyDown(KeyCode.X))
+         if (Input.GetKeyDown(KeyCode.X))
         {
             _player.SetState(new PlayerAttackState(_player));
             _player.anim.SetInteger("state", 2);
-           
+
         }
 
-        
-        if (isClimb==true&&Input.GetKeyDown(KeyCode.UpArrow)&&hit.collider!=null)
+
+        if (isClimb == true && Input.GetKeyDown(KeyCode.UpArrow) && hit.collider != null)
         {
             if (_player.trs.parent == null)
             {
@@ -68,28 +76,52 @@ public class PlayerIdleState : PlayerBaseState {
         speedX = horizontal * 3.0f;
 
         _player.anim.SetFloat("Direction", horizontal);
-        _player.rig.velocity = new Vector2(speedX, _player.rig.velocity.y);    
+        _player.rig.velocity = new Vector2(speedX, _player.rig.velocity.y);
     }
 
     public void FixedUpdate()
     {
+        
         Vector2 pos = _player.trs.position;
         pos.x += 0.2f;
         pos.y += 0.5f;
         hit = Physics2D.Raycast(pos, Vector2.up, 2.5f, 1 << LayerMask.NameToLayer("stair"));
-        hitDown= Physics2D.Raycast(pos, Vector2.down, 5.0f, 1 << LayerMask.NameToLayer("stair"));
-        if (hit.collider!=null||hitDown.collider!=null)
+        hitDown = Physics2D.Raycast(pos, Vector2.down, 5.0f, 1 << LayerMask.NameToLayer("stair"));
+        if (hit.collider != null || hitDown.collider != null)
         {
             isClimb = true;
         }
 
-        else 
+        else
         {
-            isClimb= false;
+            isClimb = false;
         }
     }
 
 
+    private int HandleKey(int index)
+    {
+        switch (index)
+        {
+            case 0:
+            case 1:
+                if (NewPlayerControll.isLight==false)
+                {
+                    NewPlayerControll.isLight = true;
+                    _player.anim.SetFloat("skillnum", 0);
+                }
+                return index;
+            case 2:
+            case 3:
+                _player.anim.SetFloat("skillnum", 1);
+                _player.anim.SetInteger("state", 5);
+                _player.SetState(new PlayerSkillState(_player));
+                return index;
+            default:
+                return -1;
+        }
+    }
 
-   
+
+  
 }

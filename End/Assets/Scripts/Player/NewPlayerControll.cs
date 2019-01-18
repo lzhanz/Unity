@@ -10,28 +10,33 @@ public class NewPlayerControll : MonoBehaviour {
     private Transform trs;
     private Rigidbody2D rig;
     private RaycastHit2D hit;
-    private bool isLeave = true;
     Color _Color;
     float _time = 0;
-    bool isLight = false;
-    Material material1;
+    private Material material1;
     Material material2;
+    private bool isLeave = true;
+    public static bool isLight = false;
 
 
+    private void Awake()
+    {
+        material1 = transform.GetComponent<Renderer>().material;
+        material2 = new Material(Resources.Load<Material>("Material/pl"));
+    }
 
     // Use this for initialization
     void Start () {
         anim= GetComponent<Animator>();
         trs = GetComponent<Transform>();
-        material1 = transform.GetComponent<Renderer>().material;
-        material2 = new Material(Resources.Load<Material>("Material/pl"));
         rig = GetComponent<Rigidbody2D>();
+
         _player = new PlayerFacade(anim, rig,trs);
 
 	}
 	
 	// Update is called once per frame
 	void Update () {
+      
         /*Vector2 pos = transform.position;
         pos.x += 0.2f;
         pos.y += 0.5f;
@@ -41,38 +46,15 @@ public class NewPlayerControll : MonoBehaviour {
                 Debug.Log(hit.collider.name);
         }*/
 
-        if(Input.GetKeyDown(KeyCode.U))
-        {
-            if(isLight==false)
-            {
-                transform.GetComponent<Renderer>().material = material2;
-                material2.SetColor("_EdgeColor", new Color(0.33725f, 0.72941f, 0));
-                _time = 0;
-                isLight = true;
-            }
-            else
-            {
-                transform.GetComponent<Renderer>().material = material1;
-            }
-        }
-        if (isLight==true)
-        {
-             _time += Time.deltaTime;
-             _Color = material2.GetColor("_EdgeColor");
-             _Color.b =(int) Mathf.Abs(255 * Mathf.Sin(0.7856f * _time));
-            _Color.b /= 255;
-            material2.SetColor("_EdgeColor", _Color);
-        }
-      
+        /*  */
+
         _player.Update();
-
-       
-
     }
 
 
     private void FixedUpdate()
     {
+        changeColor();
         _player.FixedUpdate();
     }
 
@@ -95,7 +77,7 @@ public class NewPlayerControll : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag.CompareTo("Butt")==0)
+        if (collision.tag.CompareTo("Butt") == 0)
         {
             GameObject gb = collision.gameObject.GetComponent<DoorGameObject>().gb;
             Vector3 pos = gb.transform.position;
@@ -106,9 +88,9 @@ public class NewPlayerControll : MonoBehaviour {
             collision.enabled = false;
             Time.timeScale = 0;
         }
-        if (isLeave==true&&(collision.tag.CompareTo("lift") == 0||collision.tag.CompareTo("backlift")==0))
+        if (isLeave == true && (collision.tag.CompareTo("lift") == 0 || collision.tag.CompareTo("backlift") == 0))
         {
-            
+
             transform.GetComponent<PlayerCameraMove>().STOP = false;
             this.transform.parent = collision.transform.parent.transform;
             if (collision.tag.CompareTo("lift") == 0)
@@ -120,11 +102,15 @@ public class NewPlayerControll : MonoBehaviour {
                 collision.gameObject.AddComponent<HandleBackLift>();
             }
             collision.enabled = false;
-            isLeave =false;
+            isLeave = false;
         }
+        if (collision.tag.CompareTo("winCount") == 0)
+        {
+            collision.enabled = false;
+            ++ToNextStage.boxNum;
+        }
+
     }
-
-
     private void OnTriggerExit2D(Collider2D collision)
     {
         if(transform.parent== null&&(collision.tag.CompareTo("lift") == 0 || collision.tag.CompareTo("backlift") == 0))
@@ -138,6 +124,28 @@ public class NewPlayerControll : MonoBehaviour {
         anim.SetInteger("JumpAt", num);
     }
 
+     private void SetStateNum(int num)
+    {
+        anim.SetInteger("state", num);
+        _player.SetState(new PlayerIdleState(_player));
+    }
 
-
+    private void changeColor()
+    {
+        if (anim.GetFloat("skillnum") == 0&&isLight == true)
+            {
+                transform.GetComponent<Renderer>().material = material2;
+                material2.SetColor("_EdgeColor", new Color(0.33725f, 0.72941f, 0));
+                _time = 0;
+                anim.SetFloat("skillnum", 2);
+            }
+        else if (isLight == true)
+        {
+            _time += Time.deltaTime;
+            _Color = material2.GetColor("_EdgeColor");
+            _Color.b = (int)Mathf.Abs(255 * Mathf.Sin(0.7856f * _time));
+            _Color.b /= 255;
+            material2.SetColor("_EdgeColor", _Color);
+        }
+    }
 }
