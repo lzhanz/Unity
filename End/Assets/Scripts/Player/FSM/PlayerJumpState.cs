@@ -127,7 +127,6 @@ public class PlayerJumpState : PlayerBaseState {
             {
                 if (h.collider.tag.CompareTo("monster") == 0)
                 {
-
                     h.collider.gameObject.GetComponent<MonsterControll>().HandleColor(1);
                 }
             }

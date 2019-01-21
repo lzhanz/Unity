@@ -13,6 +13,9 @@ TagManager:
   - stair
   - winCount
   - effect
+  - leftgb
+  - rightgb
+  - HurtPlayer
   layers:
   - Default
   - TransparentFX

@@ -35,7 +35,10 @@ public class BotBullet : MonoBehaviour {
     {
         if(collision.tag.CompareTo("Player")==0)
         {
-            Debug.Log(11);
+            NewPlayerControll tp = collision.gameObject.GetComponent<NewPlayerControll>();
+            tp.CURHP -= 20;
+            tp.HanleHp(tp.CURHP, tp.MAXHP);
+            tp.HandleHpColor();
         }
     }
 }

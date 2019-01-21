@@ -25,7 +25,7 @@ public class BotWalkState : MonsterBaseState
     
     public void Update()
     {
-        if(_monster.anim.GetInteger("botstate")==3)
+        if(_monster.anim.GetInteger("state")==3)
         {
             return;
         }
@@ -46,7 +46,7 @@ public class BotWalkState : MonsterBaseState
                 {
                     _monster.trs.Rotate(new Vector3(0, -180, 0));
                 }
-                _monster.anim.SetInteger("botstate", 1);
+                _monster.anim.SetInteger("state", 1);
                 _monster.SetState(new BotAttackState(_monster));
             }
         }

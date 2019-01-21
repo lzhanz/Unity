@@ -30,7 +30,7 @@ public class MonsterControll : MonoBehaviour {
         if(HurtCount>hp)
         {
             anim.speed = 0;
-            anim.SetInteger("botstate", 3);
+            anim.SetInteger("state", 3);
             transform.GetComponent<SpriteRenderer>().DOFade(0, 2.0f).OnComplete(
                 () => { Destroy(this.gameObject); }) ;
         }
@@ -38,10 +38,15 @@ public class MonsterControll : MonoBehaviour {
         
 	}
 
+    private void FixedUpdate()
+    {
+        _monster.FixedUpdate();
+    }
+
 
     void setBotState(int num)
     {
-        anim.SetInteger("botstate", num);
+        anim.SetInteger("state", num);
     }
 
 
@@ -49,7 +54,9 @@ public class MonsterControll : MonoBehaviour {
     public void HandleColor(int n)
     {
         HurtCount+=n;
-        anim.SetInteger("botstate", 3);
+     
+            anim.SetInteger("state", 3);
+ 
         anim.speed = 0;
 
         transform.GetComponent<BoxCollider2D>().enabled = false;
@@ -60,8 +67,11 @@ public class MonsterControll : MonoBehaviour {
 {
     transform.GetComponent<BoxCollider2D>().enabled = true;
     anim.speed = 1;
-    anim.SetInteger("botstate", 0);
-    
+    anim.SetInteger("state", 0);
+    if(anim.name.CompareTo("m1_0")==0)
+    {
+        _monster.SetState(new m1IdleState(_monster));
+    }
 });
             });
 

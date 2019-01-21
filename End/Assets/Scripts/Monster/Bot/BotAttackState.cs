@@ -38,11 +38,11 @@ public class BotAttackState : MonsterBaseState {
             go = false;
             finishAdd = true;
         }
-        if (_monster.anim.GetInteger("botstate") == 3)
+        if (_monster.anim.GetInteger("state") == 3)
         {
             return;
         }
-        if (_monster.anim.GetInteger("botstate") == 0)
+        if (_monster.anim.GetInteger("state") == 0)
         {
             _monster.SetState(new BotWalkState(_monster));
         }

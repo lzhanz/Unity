@@ -80,7 +80,6 @@ public class PlayerAttackState : PlayerBaseState {
         {
             if (hit.collider.tag.CompareTo("monster") == 0)
             {
-              
                 hit.collider.gameObject.GetComponent<MonsterControll>().HandleColor(1);
             }
         }

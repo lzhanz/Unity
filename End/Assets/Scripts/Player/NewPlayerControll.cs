@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using DG.Tweening;
 
 
 public class NewPlayerControll : MonoBehaviour {
@@ -10,12 +12,29 @@ public class NewPlayerControll : MonoBehaviour {
     private Transform trs;
     private Rigidbody2D rig;
     private RaycastHit2D hit;
+
+    private Image head;
+    private SpriteRenderer spR;
     Color _Color;
     float _time = 0;
     private Material material1;
     Material material2;
     private bool isLeave = true;
     public static bool isLight = false;
+    private static int cur_HP = 400;
+    private static int max_HP = 400;
+
+
+    public int CURHP
+    {
+        get { return cur_HP; }
+        set { cur_HP = value; }
+    }
+
+    public int MAXHP
+    {
+        get { return max_HP; }
+    }
 
 
     private void Awake()
@@ -29,6 +48,8 @@ public class NewPlayerControll : MonoBehaviour {
         anim= GetComponent<Animator>();
         trs = GetComponent<Transform>();
         rig = GetComponent<Rigidbody2D>();
+        head = GameObject.Find("Head").GetComponent<Image>();
+        spR = GetComponent<SpriteRenderer>();
 
         _player = new PlayerFacade(anim, rig,trs);
 
@@ -47,6 +68,7 @@ public class NewPlayerControll : MonoBehaviour {
         }*/
 
         /*  */
+     
 
         _player.Update();
     }
@@ -54,8 +76,9 @@ public class NewPlayerControll : MonoBehaviour {
 
     private void FixedUpdate()
     {
-        changeColor();
+       
         _player.FixedUpdate();
+        changeColor();
     }
 
 
@@ -151,5 +174,25 @@ public class NewPlayerControll : MonoBehaviour {
             _Color.b /= 255;
             material2.SetColor("_EdgeColor", _Color);
         }
+    }
+
+
+    public void HandleHpColor()
+    {
+        transform.tag = "HurtPlayer";
+        spR.DOColor(new Color32(255, 150, 150, 255), 0.5f)
+            .OnComplete(() => {
+        spR.DOColor(new Color32(255, 255, 255, 255), 0.8f)
+.OnComplete(() => { transform.tag = "Player"; });
+    });
+        head.DOColor(new Color32(255, 150, 150, 255), 0.5f)
+            .OnComplete(() => { head.DOColor(new Color32(255, 255, 255, 255), 0.8f); });
+    }
+
+
+    public void HanleHp(int cur, int max)
+    {
+        HealthManager.Instance.UpdateHealthBar(cur, max, false);
+        HealthManager.Instance.SetHealthValueText(cur, max, false);
     }
 }
