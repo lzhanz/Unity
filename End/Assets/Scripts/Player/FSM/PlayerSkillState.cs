@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerSkillState : PlayerBaseState
 {
     private PlayerFacade _player;
+    RaycastHit2D hit;
     int index;
 
     public PlayerSkillState(PlayerFacade _player)
@@ -37,7 +38,24 @@ public class PlayerSkillState : PlayerBaseState
         switch(dex)
         {
             case 1:
+                AttackRayCast();
                 break;
     }
+    }
+
+    void AttackRayCast()
+    {
+        Vector2 pos = _player.trs.position;
+        pos.x += 0.2f;
+        pos.y += 0.5f;
+        hit = Physics2D.Raycast(pos, _player.anim.GetFloat("Speed") == 1 ? Vector2.right : Vector2.left, 0.7f, 1 << LayerMask.NameToLayer("monster"));
+        if (hit.collider != null)
+        {
+            if (hit.collider.tag.CompareTo("monster") == 0)
+            {
+
+                hit.collider.gameObject.GetComponent<MonsterControll>().HandleColor(2);
+            }
+        }
     }
 }

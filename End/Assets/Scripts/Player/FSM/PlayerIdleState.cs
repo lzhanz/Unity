@@ -103,16 +103,16 @@ public class PlayerIdleState : PlayerBaseState
     {
         switch (index)
         {
+            
             case 0:
-            case 1:
                 if (NewPlayerControll.isLight==false)
                 {
                     NewPlayerControll.isLight = true;
                     _player.anim.SetFloat("skillnum", 0);
                 }
                 return index;
+            case 1:
             case 2:
-            case 3:
                 _player.anim.SetFloat("skillnum", 1);
                 _player.anim.SetInteger("state", 5);
                 _player.SetState(new PlayerSkillState(_player));

@@ -6,6 +6,7 @@ public class PlayerJumpState : PlayerBaseState {
 
     PlayerFacade _player;
     private float speedY;
+    private RaycastHit2D[] hit=new RaycastHit2D[4];
     private float speedX;
     private float horizontal;
     private int numjump;
@@ -38,6 +39,7 @@ public class PlayerJumpState : PlayerBaseState {
         
         if (Input.GetKeyDown(KeyCode.X) && isJump == true )
         {
+            AttackRayCast();
             if (_player.anim.GetInteger("JumpAt") == 2)
             {
                 _player.anim.SetInteger("JumpAt", 3);
@@ -109,6 +111,29 @@ public class PlayerJumpState : PlayerBaseState {
         }
     }
 
+    void AttackRayCast()
+    {
+        Vector2 pos = _player.trs.position;
+        pos.x += 0.2f;
+        pos.y += 0.5f;
+        hit[0] = Physics2D.Raycast(pos,Vector2.right, 1.2f, 1 << LayerMask.NameToLayer("monster"));
+        hit[1] = Physics2D.Raycast(pos, Vector2.left, 1.2f, 1 << LayerMask.NameToLayer("monster"));
+        hit[2] = Physics2D.Raycast(pos, Vector2.up, 1.2f, 1 << LayerMask.NameToLayer("monster"));
+        hit[3] = Physics2D.Raycast(pos, Vector2.down, 1.2f, 1 << LayerMask.NameToLayer("monster"));
+
+        foreach(RaycastHit2D h in hit)
+        {
+            if (h.collider != null)
+            {
+                if (h.collider.tag.CompareTo("monster") == 0)
+                {
+
+                    h.collider.gameObject.GetComponent<MonsterControll>().HandleColor(1);
+                }
+            }
+        }
+        
+    }
 
 
 }

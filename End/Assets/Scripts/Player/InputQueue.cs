@@ -24,8 +24,7 @@ public class InputQueue// : MonoBehaviour
 
     public void Start()
     {
-        instructsList.Add("LeftArrowRightArrowX");
-        instructsList.Add("RightArrowLeftArrowX");
+        instructsList.Add("DownArrowSpace");
         instructsList.Add("DownArrowRightArrowX");
         instructsList.Add("DownArrowLeftArrowX");
     }

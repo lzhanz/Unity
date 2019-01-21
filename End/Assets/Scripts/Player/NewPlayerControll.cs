@@ -77,6 +77,10 @@ public class NewPlayerControll : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        /*if(collision.tag.CompareTo("monster")==0)
+        {
+            collision.gameObject.GetComponent<MonsterControll>().HandleColor();
+        }*/
         if (collision.tag.CompareTo("Butt") == 0)
         {
             GameObject gb = collision.gameObject.GetComponent<DoorGameObject>().gb;

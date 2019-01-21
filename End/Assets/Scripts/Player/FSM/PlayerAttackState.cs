@@ -6,6 +6,7 @@ public class PlayerAttackState : PlayerBaseState {
 
     private PlayerFacade _player;
     private AnimatorStateInfo _stateInfo;
+    RaycastHit2D hit;
 
 
     public PlayerAttackState(PlayerFacade _player)
@@ -18,7 +19,8 @@ public class PlayerAttackState : PlayerBaseState {
     {
         
         _stateInfo = _player.anim.GetCurrentAnimatorStateInfo(0);
-        if(_stateInfo.IsName("Jump")&&_player.anim.GetInteger("state")==2)
+        AttackRayCast();
+        if (_stateInfo.IsName("Jump")&&_player.anim.GetInteger("state")==2)
         {
             _player.SetState(new PlayerIdleState(_player));
             _player.anim.SetInteger("state", 0);
@@ -63,6 +65,24 @@ public class PlayerAttackState : PlayerBaseState {
        else if (_stateInfo.IsName("Attack2")&& _stateInfo.normalizedTime < 0.8f)
         {
             _player.anim.SetInteger("Attack", 3);
+        }
+    }
+
+
+
+    void AttackRayCast()
+    {
+        Vector2 pos = _player.trs.position;
+        pos.x += 0.2f;
+        pos.y += 0.5f;
+        hit = Physics2D.Raycast(pos, _player.anim.GetFloat("Speed")==1?Vector2.right:Vector2.left,0.7f,1 << LayerMask.NameToLayer("monster"));
+        if (hit.collider!=null)
+        {
+            if (hit.collider.tag.CompareTo("monster") == 0)
+            {
+              
+                hit.collider.gameObject.GetComponent<MonsterControll>().HandleColor(1);
+            }
         }
     }
 }
