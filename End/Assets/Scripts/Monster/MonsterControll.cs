@@ -13,6 +13,7 @@ public class MonsterControll : MonoBehaviour {
     private Transform trs;
     private SpriteRenderer spR;
     public int index;
+ 
     public float moveRange;
     
 
@@ -29,6 +30,7 @@ public class MonsterControll : MonoBehaviour {
 	void Update () {
         if(HurtCount>hp)
         {
+          
             anim.speed = 0;
             anim.SetInteger("state", 3);
             transform.GetComponent<SpriteRenderer>().DOFade(0, 2.0f).OnComplete(
@@ -50,6 +52,23 @@ public class MonsterControll : MonoBehaviour {
     }
 
 
+    public void HandleBossColor(int n)
+    {
+        HurtCount += n;
+        transform.tag = "hurtBoss";
+        spR.DOColor(new Color32(255, 150, 150, 255), 0.45f)
+            .OnComplete(() =>
+            {
+                spR.DOColor(new Color32(255, 255, 255, 255), 0.68f)
+    .OnComplete(() =>
+    {
+        transform.tag = "boss";
+    });
+            });
+
+    }
+
+
 
     public void HandleColor(int n)
     {
@@ -68,9 +87,13 @@ public class MonsterControll : MonoBehaviour {
     transform.GetComponent<BoxCollider2D>().enabled = true;
     anim.speed = 1;
     anim.SetInteger("state", 0);
-    if(anim.name.CompareTo("m1_0")==0)
+    if(transform.parent.name.CompareTo("m1")==0)
     {
         _monster.SetState(new m1IdleState(_monster));
+    }
+    else if(transform.parent.name.CompareTo("Dog") == 0)
+    {
+        _monster.SetState(new DogWalkState(_monster));
     }
 });
             });

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using UnityEngine.SceneManagement;
 
 
 public class NewPlayerControll : MonoBehaviour {
@@ -14,6 +15,7 @@ public class NewPlayerControll : MonoBehaviour {
     private RaycastHit2D hit;
 
     private Image head;
+
     private SpriteRenderer spR;
     Color _Color;
     float _time = 0;
@@ -40,6 +42,7 @@ public class NewPlayerControll : MonoBehaviour {
     private void Awake()
     {
         material1 = transform.GetComponent<Renderer>().material;
+        CURHP = 400;
         material2 = new Material(Resources.Load<Material>("Material/pl"));
     }
 
@@ -50,7 +53,7 @@ public class NewPlayerControll : MonoBehaviour {
         rig = GetComponent<Rigidbody2D>();
         head = GameObject.Find("Head").GetComponent<Image>();
         spR = GetComponent<SpriteRenderer>();
-
+        
         _player = new PlayerFacade(anim, rig,trs);
 
 	}
@@ -86,8 +89,13 @@ public class NewPlayerControll : MonoBehaviour {
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        
         if (collision.collider.tag.CompareTo("path") == 0)
         {
+            if(anim.GetCurrentAnimatorStateInfo(0).IsName("Jump"))
+            {
+                AudioManager.Instance.PlaySound(6);
+            }
             _player.SetState(new PlayerIdleState(_player));
             anim.SetInteger("state", 0);
             anim.SetFloat("JumpDirection", 0);
@@ -104,6 +112,28 @@ public class NewPlayerControll : MonoBehaviour {
         {
             collision.gameObject.GetComponent<MonsterControll>().HandleColor();
         }*/
+        if (collision.tag.CompareTo("trap") == 0)
+        {
+            
+            if (CURHP > 0)
+            {
+                
+                CURHP -= 400;
+                HanleHp(CURHP, MAXHP);
+            }
+            
+            
+            HandleDead();
+        }
+        if(collision.tag.CompareTo("Tonext") == 0)
+         {
+            /*_player.trs.parent = collision.transform;
+            _player.trs.localPosition = new Vector3(-0.38f, -0.76f, -1.5f);
+            _player.trs.parent = null;
+            _player.trs.position = new Vector3(_player.trs.position.x, _player.trs.position.y, -1.5f);*/
+            anim.SetInteger("state", 7);
+            _player.SetState(new PlayerTpState(_player));
+        }
         if (collision.tag.CompareTo("Butt") == 0)
         {
             GameObject gb = collision.gameObject.GetComponent<DoorGameObject>().gb;
@@ -134,6 +164,7 @@ public class NewPlayerControll : MonoBehaviour {
         if (collision.tag.CompareTo("winCount") == 0)
         {
             collision.enabled = false;
+            Destroy(collision.gameObject);
             ++ToNextStage.boxNum;
         }
 
@@ -182,7 +213,7 @@ public class NewPlayerControll : MonoBehaviour {
         transform.tag = "HurtPlayer";
         spR.DOColor(new Color32(255, 150, 150, 255), 0.5f)
             .OnComplete(() => {
-        spR.DOColor(new Color32(255, 255, 255, 255), 0.8f)
+        spR.DOColor(new Color32(255, 255, 255, 255), 0.7f)
 .OnComplete(() => { transform.tag = "Player"; });
     });
         head.DOColor(new Color32(255, 150, 150, 255), 0.5f)
@@ -194,5 +225,25 @@ public class NewPlayerControll : MonoBehaviour {
     {
         HealthManager.Instance.UpdateHealthBar(cur, max, false);
         HealthManager.Instance.SetHealthValueText(cur, max, false);
+    }
+
+
+
+    private void startSound(int num)
+    {
+        AudioManager.Instance.PlaySound(num);
+    }
+
+     public void HandleDead()
+    {
+        _player.anim.SetInteger("state",6);
+        _player.SetState(new PlayerDeadState(_player));
+    }
+
+    private void ToNextScene()
+    {
+        PlayerPrefs.SetInt("nextScene", 2);
+        PlayerPrefs.SetInt("JumpTime", 14);
+        SceneManager.LoadScene("Loading");
     }
 }

@@ -38,6 +38,10 @@ public class BotBullet : MonoBehaviour {
             NewPlayerControll tp = collision.gameObject.GetComponent<NewPlayerControll>();
             tp.CURHP -= 20;
             tp.HanleHp(tp.CURHP, tp.MAXHP);
+            if (tp.CURHP < 0)
+            {
+                tp.HandleDead();
+            }
             tp.HandleHpColor();
         }
     }

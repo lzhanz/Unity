@@ -32,9 +32,9 @@ public class PlayerClimbState : PlayerBaseState
             _player.SetState(new PlayerJumpState(_player));
             _player.anim.SetInteger("state", 1);
         }
-        if (_player.trs.localPosition.x!=0.358f)
+        if (_player.trs.localPosition.x!=0.372f)
         {
-            _player.trs.localPosition = new Vector3(-0.358f, _player.trs.localPosition.y, _player.trs.localPosition.z);
+            _player.trs.localPosition = new Vector3(-0.372f, _player.trs.localPosition.y, _player.trs.localPosition.z);
         }
         if (Input.GetKeyUp(KeyCode.UpArrow)&& !Input.GetKey(KeyCode.DownArrow))
         {
@@ -66,7 +66,7 @@ public class PlayerClimbState : PlayerBaseState
         Vector2 pos = _player.trs.position;
         pos.x += 0.2f;
         pos.y += 0.5f;
-        hit = Physics2D.Raycast(pos, Vector2.up, 0.5f, 1 << LayerMask.NameToLayer("stairup"));
+        hit = Physics2D.Raycast(pos, Vector2.up, 0.8f, 1 << LayerMask.NameToLayer("stairup"));
         if (hit.collider != null)
         {
             _player.trs.parent = hit.collider.transform;
@@ -74,7 +74,7 @@ public class PlayerClimbState : PlayerBaseState
             _player.SetState(new PlayerIdleState(_player));
             _player.anim.SetInteger("state", 0);
             _player.anim.speed = 1;
-            _player.trs.localPosition = new Vector3(0,-0.06f,_player.trs.localPosition.z);
+            _player.trs.localPosition = new Vector3(0,-0.09f,_player.trs.localPosition.z);
             _player.trs.parent = null;
         }
     }

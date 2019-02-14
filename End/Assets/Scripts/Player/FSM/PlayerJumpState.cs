@@ -14,6 +14,7 @@ public class PlayerJumpState : PlayerBaseState {
     private bool isJump;
     private float gravity;
     private bool firstEnter;
+    private int jumpTime;
 
 
 
@@ -24,7 +25,9 @@ public class PlayerJumpState : PlayerBaseState {
         cTime = 0;
         gravity = 0.54f;
         isJump = true;
+        jumpTime = PlayerPrefs.GetInt("JumpTime");
         speedY = 1.0f;
+        AudioManager.Instance.PlaySound(5);
         _player.rig.velocity = new Vector2(speedX, speedY);
 
     }
@@ -71,6 +74,7 @@ public class PlayerJumpState : PlayerBaseState {
 
         if (Input.GetKeyDown(KeyCode.C) && numjump != 3)
         {
+            AudioManager.Instance.PlaySound(5);
             if (numjump == 2)
             {
                 _player.anim.SetInteger("JumpAt", 2);
@@ -81,7 +85,7 @@ public class PlayerJumpState : PlayerBaseState {
 
         if (Input.GetKey(KeyCode.C) && isJump == true && numjump != 3)
         {
-            if (cTime < 12)
+            if (cTime < jumpTime)
             {
                 cTime += 1;
                 speedY += 1.0f;
@@ -116,12 +120,12 @@ public class PlayerJumpState : PlayerBaseState {
         Vector2 pos = _player.trs.position;
         pos.x += 0.2f;
         pos.y += 0.5f;
-        hit[0] = Physics2D.Raycast(pos,Vector2.right, 1.2f, 1 << LayerMask.NameToLayer("monster"));
-        hit[1] = Physics2D.Raycast(pos, Vector2.left, 1.2f, 1 << LayerMask.NameToLayer("monster"));
-        hit[2] = Physics2D.Raycast(pos, Vector2.up, 1.2f, 1 << LayerMask.NameToLayer("monster"));
-        hit[3] = Physics2D.Raycast(pos, Vector2.down, 1.2f, 1 << LayerMask.NameToLayer("monster"));
+        hit[0] = Physics2D.Raycast(pos,Vector2.right, 1.2f, (1 << 9) | 1 << 13);
+        hit[1] = Physics2D.Raycast(pos, Vector2.left, 1.2f, (1 << 9) | 1 << 13);
+        hit[2] = Physics2D.Raycast(pos, Vector2.up, 1.2f, (1 << 9) | 1 << 13);
+        hit[3] = Physics2D.Raycast(pos, Vector2.down, 1.2f, (1 << 9) | 1 << 13);
 
-        foreach(RaycastHit2D h in hit)
+        foreach (RaycastHit2D h in hit)
         {
             if (h.collider != null)
             {
@@ -129,6 +133,11 @@ public class PlayerJumpState : PlayerBaseState {
                 {
                     h.collider.gameObject.GetComponent<MonsterControll>().HandleColor(1);
                 }
+                if (h.collider.tag.CompareTo("boss") == 0)
+                {
+                    h.collider.gameObject.GetComponent<MonsterControll>().HandleBossColor(1);
+                }
+                
             }
         }
         

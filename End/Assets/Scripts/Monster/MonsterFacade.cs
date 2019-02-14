@@ -48,6 +48,12 @@ public class MonsterFacade
             case 1:
                 _state = new m1IdleState(this);
                 break;
+            case 2:
+                _state = new DogWalkState(this);
+                break;
+            case 3:
+                _state = new BossIdleState(this,0.1f);
+                break;
 
         }
     }

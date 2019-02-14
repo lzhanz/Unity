@@ -53,9 +53,16 @@ public class m1AttackState :MonsterBaseState
             pos.y += 1.0f;
             hit = Physics2D.Raycast(pos, _monster.trs.rotation.y == 0 ? Vector2.left : Vector2.right, 0.8f, 1 << LayerMask.NameToLayer("Player"));
             
-            if(hit.collider!=null)
+            if(hit.collider!=null&& hit.collider.tag.CompareTo("Player") == 0)
             {
-                Debug.Log(hit.collider.name);
+                NewPlayerControll tp = hit.collider.gameObject.GetComponent<NewPlayerControll>();
+                tp.CURHP -= 15;
+                tp.HanleHp(tp.CURHP, tp.MAXHP);
+                if (tp.CURHP < 0)
+                {
+                    tp.HandleDead();
+                }
+                tp.HandleHpColor();
             }
         }
     }

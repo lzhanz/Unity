@@ -59,8 +59,10 @@ public class PlayerCameraMove : MonoBehaviour {
         pos.z = Camera.main.transform.position.z;
 
         float maxX = RightUp.position.x;
+        float minY = LeftDown.position.y;
+        float maxY = RightUp.position.y;
         float minX = LeftDown.position.x;
-
+            
         if (pos.x - screenX < minX)
         {
             pos.x = minX + screenX;
@@ -68,6 +70,14 @@ public class PlayerCameraMove : MonoBehaviour {
         else if (pos.x + screenX > maxX)
         {
             pos.x = maxX - screenX;
+        }
+        if(pos.y<minY)
+        {
+            pos.y = minY;
+        }
+        else if(pos.y>maxY)
+        {
+            pos.y = maxY;
         }
 
         return pos;

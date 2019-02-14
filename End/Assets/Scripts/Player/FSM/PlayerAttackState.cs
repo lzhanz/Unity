@@ -75,12 +75,16 @@ public class PlayerAttackState : PlayerBaseState {
         Vector2 pos = _player.trs.position;
         pos.x += 0.2f;
         pos.y += 0.5f;
-        hit = Physics2D.Raycast(pos, _player.anim.GetFloat("Speed")==1?Vector2.right:Vector2.left,0.7f,1 << LayerMask.NameToLayer("monster"));
+        hit = Physics2D.Raycast(pos, _player.anim.GetFloat("Speed") == 1 ? Vector2.right : Vector2.left, 0.75f, (1 << 9) | 1 << 13);
         if (hit.collider!=null)
         {
             if (hit.collider.tag.CompareTo("monster") == 0)
             {
                 hit.collider.gameObject.GetComponent<MonsterControll>().HandleColor(1);
+            }
+            if (hit.collider.tag.CompareTo("boss") == 0)
+            {
+                hit.collider.gameObject.GetComponent<MonsterControll>().HandleBossColor(1);
             }
         }
     }

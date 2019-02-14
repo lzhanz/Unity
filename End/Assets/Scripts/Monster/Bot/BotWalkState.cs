@@ -5,7 +5,7 @@ using UnityEngine;
 public class BotWalkState : MonsterBaseState
 {
     MonsterFacade _monster;
-    bool needBack = false;
+    private bool needBack = false;
     Vector2 p1;
     Vector2 p2;
     private float maxMove;

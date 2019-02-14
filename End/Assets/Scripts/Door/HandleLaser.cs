@@ -26,9 +26,16 @@ public class HandleLaser : MonoBehaviour {
         else if(ps.isPlaying&&isReEnd==true)
         {
             hit = Physics2D.Raycast(gb.transform.position, Vector2.up, 3.0f, 1 << LayerMask.NameToLayer("Player"));
-            if (hit.collider != null&& isHurt==false)
+            if (hit.collider != null&& isHurt==false&& hit.collider.tag.CompareTo("Player") == 0)
             {
-                Debug.Log(hit.collider.name);
+                NewPlayerControll tp = hit.collider.gameObject.GetComponent<NewPlayerControll>();
+                tp.CURHP -= 25;
+                tp.HanleHp(tp.CURHP, tp.MAXHP);
+                if (tp.CURHP < 0)
+                {
+                    tp.HandleDead();
+                }
+                tp.HandleHpColor();
                 isHurt = true;
                 Invoke("ReHurt", 2.2f);
             }

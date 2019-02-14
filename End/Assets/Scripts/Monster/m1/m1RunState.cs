@@ -24,7 +24,7 @@ public class m1RunState :MonsterBaseState
         if (m1IdleState.isCd == true)
         {
             m1IdleState.waterCd += Time.deltaTime;
-            if (m1IdleState.waterCd > 10.0f)
+            if (m1IdleState.waterCd > 35.0f)
             {
                 m1IdleState.isCd = false;
             }
@@ -40,14 +40,14 @@ public class m1RunState :MonsterBaseState
             _monster.SetState(new m1AttackState(_monster));
             return;
         }
-        else if (Mathf.Abs(playerdis) <= 4 && Mathf.Abs(playerdisY) < 3)
+        else if (Mathf.Abs(playerdis) <= 4 && Mathf.Abs(playerdisY) < 1.5f)
         {
-            float a = Random.Range(0f, 6f);
-            if (a >= 4.0f&& m1IdleState.isCd==false)
+            float a = Random.Range(0f, 8f);
+            if (a >= 6.0f&& m1IdleState.isCd==false)
             {
                 m1IdleState.isCd = true;
                 m1IdleState.waterCd = 0;
-             
+                
                 _monster.anim.SetFloat("Num", 1);
                 _monster.anim.SetInteger("state", 2);
                 _monster.SetState(new m1AttackState(_monster));

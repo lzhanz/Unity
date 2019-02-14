@@ -52,7 +52,7 @@ public class PlayerIdleState : PlayerBaseState
             if (_player.trs.parent == null)
             {
                 _player.trs.parent = hit.collider.transform;
-                _player.trs.localPosition = new Vector3(-0.358f, _player.trs.localPosition.y, _player.trs.localPosition.z);
+                _player.trs.localPosition = new Vector3(-0.372f, _player.trs.localPosition.y, _player.trs.localPosition.z);
             }
             _player.SetState(new PlayerClimbState(_player));
             _player.anim.SetInteger("state", 3);
@@ -63,7 +63,7 @@ public class PlayerIdleState : PlayerBaseState
             {
                 _player.trs.parent = hitDown.collider.transform;
                 _player.rig.velocity = new Vector2(0, 0);
-                _player.trs.localPosition = new Vector3(-0.358f, 2.62f, _player.trs.localPosition.z);
+                _player.trs.localPosition = new Vector3(-0.372f, 2.32f, _player.trs.localPosition.z);
             }
             _player.SetState(new PlayerClimbState(_player));
             _player.anim.SetInteger("state", 3);
@@ -73,7 +73,7 @@ public class PlayerIdleState : PlayerBaseState
         {
             _player.anim.SetFloat("Speed", horizontal > 0 ? 1 : -1);
         }
-        speedX = horizontal * 3.0f;
+        speedX = horizontal * 5.0f;
 
         _player.anim.SetFloat("Direction", horizontal);
         _player.rig.velocity = new Vector2(speedX, _player.rig.velocity.y);

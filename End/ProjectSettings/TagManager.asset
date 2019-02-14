@@ -16,6 +16,9 @@ TagManager:
   - leftgb
   - rightgb
   - HurtPlayer
+  - Tonext
+  - boss
+  - hurtBoss
   layers:
   - Default
   - TransparentFX
@@ -30,7 +33,7 @@ TagManager:
   - stair
   - stairup
   - stairdown
-  - 
+  - Boss
   - 
   - 
   - 
